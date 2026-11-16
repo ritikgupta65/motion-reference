@@ -1,0 +1,11 @@
+@use 'tokens' as *;
+
+.subbar {
+  display: flex; align-items: baseline; gap: 12px; padding: 24px 24px 4px;
+  .spacer { flex: 1; }
+}
+.crumb {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted);
+  b { color: var(--text); font-weight: 600; }
+}
+.stat { font-family: $font-mono; font-size: 11px; color: var(--text-muted); }

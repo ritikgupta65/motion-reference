@@ -1,0 +1,10 @@
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+@media (max-width: 1100px) { .grid { --cols: 3; } }
+@media (max-width: 820px) {
+  .grid { --cols: 2; }
+  .subbar, .filters, .grid, header { padding-left: 16px; padding-right: 16px; }
+  .grid { margin-left: 16px; margin-right: 16px; }
+}
+@media (max-width: 520px) { .grid { --cols: 1; } }

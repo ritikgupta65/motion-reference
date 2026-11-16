@@ -1,0 +1,14 @@
+@use 'tokens' as *;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--text); font-family: $font-body; font-size: 13.5px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+::selection { background: var(--accent); color: #fff; }
+button { font-family: inherit; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { @include focus-ring; }
+
+/* Scrollbars: thin, border-colored thumb, transparent track */
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }

@@ -1,0 +1,8 @@
+@use 'tokens' as *;
+
+.setup {
+  max-width: 620px; margin: 64px auto; padding: 0 24px;
+  h1 { font-family: $font-display; font-weight: 600; font-size: 22px; letter-spacing: -.02em; margin-bottom: 8px; }
+  .lede { color: var(--text-muted); font-size: 13.5px; line-height: 1.6; margin-bottom: 24px; }
+  pre { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; overflow: auto; font-family: $font-mono; font-size: 12px; line-height: 1.5; white-space: pre; }
+}

@@ -1,0 +1,76 @@
+@use 'tokens' as *;
+
+/* Lightbox sits on a dark scrim in every theme, so it always uses the dark palette */
+#lightbox { @include dark-tokens; color: var(--text); }
+#lightbox .overlay-inner { display: flex; gap: 32px; align-items: center; justify-content: center; width: 100%; max-width: 900px; flex-wrap: wrap; }
+.player-stage {
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  &:fullscreen { background: var(--bg); justify-content: center; padding: 24px; }
+}
+.lightbox-phone {
+  position: relative; width: min(300px, 74vw); aspect-ratio: 9/19.5; background: #000; border-radius: 42px; border: 7px solid #0c0c0e;
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .7), 0 0 0 1px var(--border); overflow: hidden;
+  .player-stage:fullscreen & { width: auto; height: 88vh; }
+  video { width: 100%; height: 100%; object-fit: cover; }
+  .island { top: 10px; height: 16px; }
+}
+
+/* control bar — floating panel */
+.player {
+  display: flex; align-items: center; gap: 8px; background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 8px 12px; width: min(300px, 74vw); box-shadow: var(--shadow-panel);
+  button {
+    width: 26px; height: 26px; border: none; border-radius: var(--radius-sm); background: transparent; cursor: pointer; color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0;
+    transition: background-color var(--dur-hover), color var(--dur-hover);
+    svg { width: 16px; height: 16px; fill: currentColor; }
+    &:hover { background: var(--raised); color: var(--text); }
+  }
+  .scrub { flex: 1; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 99px; background: var(--border); outline: none; cursor: pointer; @include range-thumb(12px); }
+  .vol { width: 52px; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 99px; background: var(--border); outline: none; cursor: pointer; @include range-thumb(10px); }
+  .spd { font-family: $font-mono; font-size: 11px; font-weight: 500; width: auto; padding: 0 4px; }
+  .spd.on, .lp.on { color: var(--accent); }
+  .spd.on:hover, .lp.on:hover { color: var(--accent-hover); }
+}
+.ptime { font-family: $font-mono; font-size: 10px; color: var(--text-muted); flex-shrink: 0; min-width: 64px; text-align: center; }
+
+.lightbox-info {
+  color: var(--text); min-width: 230px; max-width: 300px; display: flex; flex-direction: column; gap: 16px;
+  .approw {
+    display: flex; align-items: center; gap: 12px;
+    img { width: 32px; height: 32px; border-radius: var(--radius-sm); object-fit: cover; }
+    .fallback { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--raised); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; font-weight: 600; font-family: $font-display; }
+    span { font-weight: 600; font-size: 13px; }
+  }
+  h2 { font-family: $font-display; font-weight: 600; font-size: 20px; letter-spacing: -.015em; line-height: 1.2; }
+  .meta { font-family: $font-mono; font-size: 11px; color: var(--text-muted); line-height: 1.6; }
+}
+.lb-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+/* Secondary buttons */
+.lb-btn {
+  display: flex; align-items: center; gap: 8px; font: inherit; font-weight: 500; font-size: 12.5px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--raised); color: var(--text); border-radius: var(--radius-md); padding: 8px 12px;
+  transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
+  &:hover { background: var(--raised-hover); }
+  svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.9; }
+  &.liked { border-color: var(--danger); color: var(--danger); }
+  &.liked svg { fill: var(--danger); stroke: var(--danger); }
+  &.danger { color: var(--danger); }
+  &.danger:hover { border-color: var(--danger); background: rgba(242, 87, 87, .1); }
+}
+/* Icon-only buttons on the scrim */
+.lightbox-close {
+  position: absolute; top: 24px; right: 24px; width: 36px; height: 36px; border-radius: var(--radius-md); border: 1px solid var(--border); cursor: pointer;
+  background: var(--panel); color: var(--text-muted); font-size: 14px; transition: background-color var(--dur-hover), color var(--dur-hover); z-index: 5;
+  &:hover { background: var(--raised); color: var(--text); }
+}
+.navarrow {
+  position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: var(--radius-md); border: 1px solid var(--border);
+  background: var(--panel); color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5;
+  transition: background-color var(--dur-hover), color var(--dur-hover);
+  &:hover { background: var(--raised); color: var(--text); }
+  svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+  &.prev { left: 24px; }
+  &.next { right: 24px; }
+  @media (max-width: 720px) { display: none; }
+}

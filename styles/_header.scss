@@ -1,0 +1,37 @@
+@use 'tokens' as *;
+
+header {
+  position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 16px; padding: 12px 24px;
+  background: var(--header-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+  .spacer { flex: 1; }
+}
+.wordmark {
+  font-family: $font-display; font-weight: 600; font-size: 18px; letter-spacing: -.03em; user-select: none; display: flex; align-items: center; gap: 2px;
+  b { color: var(--text); font-weight: 600; }
+  .o { width: 13px; height: 13px; border-radius: 50%; background: var(--orange-grad); display: inline-block; margin: 0 1px; transform: translateY(1px); }
+}
+/* Primary button */
+.hbtn {
+  font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--raised); color: var(--text);
+  border-radius: var(--radius-md); padding: 8px 12px; transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
+  &:hover { background: var(--raised-hover); }
+  &.solid { background: var(--accent); border-color: var(--accent); color: #fff; }
+  &.solid:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+}
+/* Icon-only button */
+.iconbtn {
+  width: 32px; height: 32px; border-radius: var(--radius-md); border: 1px solid transparent; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; color: var(--text-muted);
+  transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
+  &:hover { background: var(--raised); color: var(--text); }
+  svg { width: 16px; height: 16px; }
+}
+.owner-only { display: none; }
+body.is-owner .owner-only { display: inline-flex; }
+/* Pill / badge */
+.owner-badge {
+  display: none; align-items: center; gap: 8px; font-family: $font-body; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text-muted); border: 1px solid var(--border); border-radius: 99px; padding: 4px 8px;
+  .d { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+}
+body.is-owner .owner-badge { display: inline-flex; }
