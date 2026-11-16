@@ -1,8 +1,12 @@
 @use 'tokens' as *;
 
-.grid { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); border-top: 1px solid var(--border); border-left: 1px solid var(--border); margin: 0 24px 64px; }
+.grid {
+  display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr);
+  border-top: 1px solid rgba(255,255,255,.07); border-left: 1px solid rgba(255,255,255,.07);
+  flex: 1; overflow-y: auto; min-height: 0;
+}
 .cell {
-  border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 32px 24px 24px;
+  border-right: 1px solid rgba(255,255,255,.07); border-bottom: 1px solid rgba(255,255,255,.07); padding: 32px 24px 24px;
   display: flex; flex-direction: column; align-items: center; min-height: 420px; position: relative; transition: background-color var(--dur-hover);
   &:hover { background: var(--panel); }
 }

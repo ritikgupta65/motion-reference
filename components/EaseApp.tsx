@@ -9,7 +9,6 @@ import Cell from "./Cell";
 import AuthSheet from "./AuthSheet";
 import UploadSheet, { type UploadSession } from "./UploadSheet";
 import Lightbox from "./Lightbox";
-import { IconStar } from "./Icons";
 
 export default function EaseApp() {
   if (!configured) {
@@ -27,7 +26,7 @@ function Directory() {
   const [items, setItems] = useState<Item[]>([]);
   const [status, setStatus] = useState<"loading" | "error" | "ready">("loading");
   const [loadError, setLoadError] = useState("");
-  const [filter, setFilter] = useState<Filter>({ type: "pop" });
+  const [filter, setFilter] = useState<Filter>({ type: "all" });
   const [isOwner, setIsOwner] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [lbOpen, setLbOpen] = useState(false);
@@ -186,30 +185,33 @@ function Directory() {
   return (
     <>
       <nav className="topnav">
-        <div className="wordmark">
-          <span>p</span><span className="o"></span><span>p</span>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/pop.svg" alt="pop" className="topnav-logo" />
       </nav>
 
-      <div className="toolbar">
-        <h1 className="tool-title">Interaction Library</h1>
+      <div className="ct-body">
+      <div className="ct-stage">
+      <div className="ct-stage-head">
+        <div className="stage-head-top">
+          <h1 className="tool-title">Interaction Library</h1>
+          <button className="hbtn solid" onClick={() => openUpload(null)}>
+            + Add interaction
+          </button>
+        </div>
         <div className="toolbar-chips">
           {status === "ready" && (
             <>
-              <button
-                className={"chip pop" + (filter.type === "pop" ? " active" : "")}
-                onClick={() => setFilter({ type: "pop" })}
-              >
-                <IconStar />
-                Pop
-              </button>
               <button
                 className={"chip" + (filter.type === "all" ? " active" : "")}
                 onClick={() => setFilter({ type: "all" })}
               >
                 All <span className="cnt">{items.length}</span>
               </button>
-              {apps.map((a) => {
+              {[...apps].sort((a, b) => {
+                if (a.toLowerCase() === "pop") return -1;
+                if (b.toLowerCase() === "pop") return 1;
+                return a.localeCompare(b);
+              }).map((a) => {
                 const w = items.find((i) => i.app === a && i.icon);
                 const n = items.filter((i) => i.app === a).length;
                 const active = filter.type === "app" && filter.app === a;
@@ -228,12 +230,11 @@ function Directory() {
             </>
           )}
         </div>
-        <button className="hbtn solid" onClick={() => openUpload(null)}>
-          + Add interaction
-        </button>
-      </div>
+      </div>{/* ct-stage-head */}
 
-      <div className="grid">
+      <div className="ct-stage-body">
+
+      <div className="grid" style={{ overflowY: 'auto' }}>
         {status === "loading" && <div className="loading">LOADING DIRECTORY…</div>}
         {status === "error" && (
           <div className="empty">
@@ -260,6 +261,10 @@ function Directory() {
             />
           ))}
       </div>
+
+      </div>{/* ct-stage-body */}
+      </div>{/* ct-stage */}
+      </div>{/* ct-body */}
 
       <UploadSheet
         open={uploadOpen}

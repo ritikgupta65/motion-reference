@@ -1,48 +1,67 @@
 @use 'tokens' as *;
 
-/* ── Top navbar: just the logo ── */
+/* ── Top bar: just the logo, centered — mirrors ct-top from cataloging tool ── */
 .topnav {
-  position: sticky; top: 0; z-index: 50;
+  flex: none;
   display: flex; align-items: center; justify-content: center;
-  height: 50px; padding: 0 24px;
-  background: #060607; border-bottom: 1px solid rgba(255,255,255,.07);
-  backdrop-filter: blur(16px);
+  padding: 16px clamp(18px, 3vw, 36px);
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: var(--bg);
 }
-.wordmark {
-  font-family: $font-display; font-weight: 700; font-size: 20px; letter-spacing: -.04em;
-  user-select: none; display: flex; align-items: center; gap: 0; color: #fff;
-  .o { width: 14px; height: 14px; border-radius: 50%; background: var(--orange-grad); display: inline-block; margin: 0 1.5px; transform: translateY(1.5px); }
+.topnav-logo { display: block; width: 88px; }
+
+/* ── Card body layout (mirrors .ct-body) ── */
+.ct-body {
+  flex: 1; min-height: 0; display: flex; gap: 16px;
+  margin: 16px clamp(18px, 3vw, 36px) 20px;
+}
+.ct-stage {
+  display: flex; flex-direction: column; flex: 1; min-width: 0;
+  border-radius: 22px; border: 1px solid rgba(255,255,255,.09);
+  background: #141417; overflow: hidden;
+}
+.ct-stage-head {
+  flex: none;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: rgba(17,17,20,.86);
+}
+.stage-head-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.ct-stage-body {
+  position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column;
 }
 
-/* ── Toolbar: title + chips + add button ── */
-.toolbar {
-  position: sticky; top: 50px; z-index: 40;
-  display: flex; align-items: center; gap: 20px; padding: 14px 24px;
-  background: var(--header-bg); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
+/* Tool title: matches ct-title's Awesome Serif Italic */
 .tool-title {
-  font-family: $font-display; font-size: 19px; font-weight: 600;
-  letter-spacing: -.025em; color: var(--text); flex-shrink: 0; margin: 0;
+  font-family: $font-serif-italic; font-size: 24px; font-weight: 700; font-style: italic;
+  letter-spacing: 0.02em; color: #e9e9ee; flex-shrink: 0; margin: 0;
   white-space: nowrap;
 }
+
+/* Chips container: pill that hugs its chips — matches ct-output-tabs */
 .toolbar-chips {
-  display: flex; align-items: center; gap: 6px; flex: 1;
-  overflow-x: auto; min-width: 0;
-  /* hide scrollbar */
-  scrollbar-width: none;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.09);
+  background: rgba(17,17,20,.86);
+  align-self: flex-start;
+  overflow-x: auto; max-width: 100%; scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
 
-/* Primary button */
+/* Primary button — matches ct-view-tab .is-on feel */
 .hbtn {
-  flex-shrink: 0; font-size: 13px; font-weight: 500; cursor: pointer;
-  border: 1px solid var(--border); background: var(--raised); color: var(--text);
-  border-radius: var(--radius-md); padding: 8px 14px;
-  transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
-  &:hover { background: var(--raised-hover); }
-  &.solid { background: var(--accent); border-color: var(--accent); color: #fff; }
-  &.solid:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  flex-shrink: 0; font-family: $font-body; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  border: 0; background: transparent; color: #86858f;
+  border-radius: 999px; padding: 0.5rem 1.05rem;
+  transition: background 0.15s, color 0.15s;
+  &:hover { color: #e9e9ee; }
+  &.solid { background: var(--accent); color: #fff; }
+  &.solid:hover { background: var(--accent-hover); }
 }
 /* Icon-only button */
 .iconbtn {
@@ -54,7 +73,6 @@
 }
 .owner-only { display: none; }
 body.is-owner .owner-only { display: inline-flex; }
-/* Pill / badge */
 .owner-badge {
   display: none; align-items: center; gap: 8px; font-family: $font-body; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
   color: var(--text-muted); border: 1px solid var(--border); border-radius: 99px; padding: 4px 8px;
