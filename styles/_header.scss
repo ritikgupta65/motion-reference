@@ -1,19 +1,45 @@
 @use 'tokens' as *;
 
-header {
-  position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 16px; padding: 12px 24px;
-  background: var(--header-bg); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
-  .spacer { flex: 1; }
+/* ── Top navbar: just the logo ── */
+.topnav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  height: 50px; padding: 0 24px;
+  background: #060607; border-bottom: 1px solid rgba(255,255,255,.07);
+  backdrop-filter: blur(16px);
 }
 .wordmark {
-  font-family: $font-display; font-weight: 600; font-size: 18px; letter-spacing: -.03em; user-select: none; display: flex; align-items: center; gap: 2px;
-  b { color: var(--text); font-weight: 600; }
-  .o { width: 13px; height: 13px; border-radius: 50%; background: var(--orange-grad); display: inline-block; margin: 0 1px; transform: translateY(1px); }
+  font-family: $font-display; font-weight: 700; font-size: 20px; letter-spacing: -.04em;
+  user-select: none; display: flex; align-items: center; gap: 0; color: #fff;
+  .o { width: 14px; height: 14px; border-radius: 50%; background: var(--orange-grad); display: inline-block; margin: 0 1.5px; transform: translateY(1.5px); }
 }
+
+/* ── Toolbar: title + chips + add button ── */
+.toolbar {
+  position: sticky; top: 50px; z-index: 40;
+  display: flex; align-items: center; gap: 20px; padding: 14px 24px;
+  background: var(--header-bg); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.tool-title {
+  font-family: $font-display; font-size: 19px; font-weight: 600;
+  letter-spacing: -.025em; color: var(--text); flex-shrink: 0; margin: 0;
+  white-space: nowrap;
+}
+.toolbar-chips {
+  display: flex; align-items: center; gap: 6px; flex: 1;
+  overflow-x: auto; min-width: 0;
+  /* hide scrollbar */
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
 /* Primary button */
 .hbtn {
-  font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--raised); color: var(--text);
-  border-radius: var(--radius-md); padding: 8px 12px; transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
+  flex-shrink: 0; font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border); background: var(--raised); color: var(--text);
+  border-radius: var(--radius-md); padding: 8px 14px;
+  transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
   &:hover { background: var(--raised-hover); }
   &.solid { background: var(--accent); border-color: var(--accent); color: #fff; }
   &.solid:hover { background: var(--accent-hover); border-color: var(--accent-hover); }

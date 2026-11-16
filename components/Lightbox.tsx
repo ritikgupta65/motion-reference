@@ -164,6 +164,11 @@ export default function Lightbox({
       </button>
       <div className="overlay-inner">
         <div className="player-stage" ref={stageRef}>
+          <div className="lightbox-device">
+          <span className="btn-silent" aria-hidden="true" />
+          <span className="btn-vol-up" aria-hidden="true" />
+          <span className="btn-vol-down" aria-hidden="true" />
+          <span className="btn-power" aria-hidden="true" />
           <div className="lightbox-phone">
             <div className="island"></div>
             <video
@@ -181,6 +186,7 @@ export default function Lightbox({
               onPlay={() => setPaused(false)}
               onPause={() => setPaused(true)}
             ></video>
+          </div>
           </div>
           <div className="player">
             <button onClick={togglePlay}>{paused ? <IconPlay /> : <IconPause />}</button>

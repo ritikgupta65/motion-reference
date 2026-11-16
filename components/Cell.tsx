@@ -32,9 +32,15 @@ export default function Cell({ item, onOpen }: Props) {
         }}
         onClick={() => onOpen(item)}
       >
-        <div className="phone">
-          <div className="island"></div>
-          <video ref={videoRef} src={item.video} muted loop playsInline preload="metadata"></video>
+        <div className="device">
+          <span className="btn-silent" aria-hidden="true" />
+          <span className="btn-vol-up" aria-hidden="true" />
+          <span className="btn-vol-down" aria-hidden="true" />
+          <span className="btn-power" aria-hidden="true" />
+          <div className="phone">
+            <div className="island"></div>
+            <video ref={videoRef} src={item.video} muted loop playsInline preload="metadata"></video>
+          </div>
         </div>
         <div className="hoverplay">
           <IconPlay />

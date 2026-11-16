@@ -185,66 +185,52 @@ function Directory() {
 
   return (
     <>
-      <header>
+      <nav className="topnav">
         <div className="wordmark">
-          <b>Eas</b>
-          <span className="o"></span>
+          <span>p</span><span className="o"></span><span>p</span>
         </div>
-        <span className="owner-badge">
-          <span className="d"></span>OWNER
-        </span>
-        <div className="spacer"></div>
+      </nav>
+
+      <div className="toolbar">
+        <h1 className="tool-title">Interaction Library</h1>
+        <div className="toolbar-chips">
+          {status === "ready" && (
+            <>
+              <button
+                className={"chip pop" + (filter.type === "pop" ? " active" : "")}
+                onClick={() => setFilter({ type: "pop" })}
+              >
+                <IconStar />
+                Pop
+              </button>
+              <button
+                className={"chip" + (filter.type === "all" ? " active" : "")}
+                onClick={() => setFilter({ type: "all" })}
+              >
+                All <span className="cnt">{items.length}</span>
+              </button>
+              {apps.map((a) => {
+                const w = items.find((i) => i.app === a && i.icon);
+                const n = items.filter((i) => i.app === a).length;
+                const active = filter.type === "app" && filter.app === a;
+                return (
+                  <button
+                    key={a}
+                    className={"chip" + (active ? " active" : "")}
+                    onClick={() => setFilter({ type: "app", app: a })}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {w && <img src={w.icon!} alt="" />}
+                    {a} <span className="cnt">{n}</span>
+                  </button>
+                );
+              })}
+            </>
+          )}
+        </div>
         <button className="hbtn solid" onClick={() => openUpload(null)}>
           + Add interaction
         </button>
-      </header>
-
-      <div className="subbar">
-        <span className="crumb">
-          Interaction Directory / <b>{crumb}</b>
-        </span>
-        <span className="spacer"></span>
-        <span className="stat">
-          {status === "ready"
-            ? `${items.length} interaction${items.length === 1 ? "" : "s"} · ${apps.length} app${apps.length === 1 ? "" : "s"}`
-            : "—"}
-        </span>
-      </div>
-
-      <div className="filters">
-        {status === "ready" && (
-          <>
-            <button
-              className={"chip pop" + (filter.type === "pop" ? " active" : "")}
-              onClick={() => setFilter({ type: "pop" })}
-            >
-              <IconStar />
-              Pop
-            </button>
-            <button
-              className={"chip" + (filter.type === "all" ? " active" : "")}
-              onClick={() => setFilter({ type: "all" })}
-            >
-              All <span className="cnt">{items.length}</span>
-            </button>
-            {apps.map((a) => {
-              const w = items.find((i) => i.app === a && i.icon);
-              const n = items.filter((i) => i.app === a).length;
-              const active = filter.type === "app" && filter.app === a;
-              return (
-                <button
-                  key={a}
-                  className={"chip" + (active ? " active" : "")}
-                  onClick={() => setFilter({ type: "app", app: a })}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {w && <img src={w.icon!} alt="" />}
-                  {a} <span className="cnt">{n}</span>
-                </button>
-              );
-            })}
-          </>
-        )}
       </div>
 
       <div className="grid">
