@@ -1,22 +1,23 @@
 @use 'tokens' as *;
 
-.filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 24px 16px; }
+/* .filters outer moved into .toolbar-chips — chips now match ct-tab pill style */
 .chip {
-  display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 500; cursor: pointer;
-  border: 1px solid var(--border); background: var(--raised); color: var(--text-muted); border-radius: var(--radius-sm); padding: 4px 12px; min-height: 28px;
-  transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
-  img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; }
-  .cnt { font-family: $font-mono; font-size: 10px; color: var(--text-muted); }
-  &:hover { background: var(--raised-hover); color: var(--text); }
-  &.active { border-color: var(--accent); background: var(--panel); color: var(--text); }
-  &.active .cnt { color: var(--text-muted); }
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  border: 0; background: transparent; color: #86858f;
+  border-radius: 999px; padding: 0.4rem 1rem; white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+  img { width: 14px; height: 14px; border-radius: 3px; object-fit: cover; }
+  .cnt { font-family: $font-mono; font-size: 10px; opacity: 0.75; }
+  &:hover { color: #e9e9ee; }
+  &.active { background: var(--accent); color: #fff; }
+  &.active .cnt { opacity: 0.75; }
 
-  /* Pop is always first — accent-tinted */
+  /* Pop first — same accent tint */
   &.pop {
-    color: var(--accent); font-weight: 600;
-    svg { width: 14px; height: 14px; fill: currentColor; }
+    color: var(--accent);
+    svg { width: 13px; height: 13px; fill: currentColor; }
     &:hover { color: var(--accent-hover); }
-    &.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-    &.active:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    &.active { background: var(--accent); color: #fff; }
   }
 }

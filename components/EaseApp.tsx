@@ -3,13 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { BUCKET, configured } from "@/lib/config";
-import { store } from "@/lib/utils";
+
 import { rowToItem, type Filter, type InteractionRow, type Item } from "@/lib/types";
 import Cell from "./Cell";
 import AuthSheet from "./AuthSheet";
 import UploadSheet, { type UploadSession } from "./UploadSheet";
 import Lightbox from "./Lightbox";
-import { IconLock, IconStar } from "./Icons";
 
 export default function EaseApp() {
   if (!configured) {
@@ -27,10 +26,8 @@ function Directory() {
   const [items, setItems] = useState<Item[]>([]);
   const [status, setStatus] = useState<"loading" | "error" | "ready">("loading");
   const [loadError, setLoadError] = useState("");
-  const [filter, setFilter] = useState<Filter>({ type: "pop" });
+  const [filter, setFilter] = useState<Filter>({ type: "all" });
   const [isOwner, setIsOwner] = useState(false);
-  const [likedSet, setLikedSet] = useState<Set<string>>(() => new Set());
-
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [lbOpen, setLbOpen] = useState(false);
   const [lbToken, setLbToken] = useState(0);
@@ -49,11 +46,6 @@ function Directory() {
     setToastShow(true);
     clearTimeout(toastT.current);
     toastT.current = window.setTimeout(() => setToastShow(false), 3000);
-  }, []);
-
-  /* liked set lives in localStorage */
-  useEffect(() => {
-    setLikedSet(new Set(store.get<string[]>("ease:liked") || []));
   }, []);
 
   /* ---- auth ---- */
@@ -120,23 +112,11 @@ function Directory() {
     return () => subscription.unsubscribe();
   }, [refreshAuth, load]);
 
-  const toggleLike = async (item: Item) => {
-    const up = !likedSet.has(item.id);
-    setItems((prev) => prev.map((x) => (x.id === item.id ? { ...x, likes: Math.max(0, x.likes + (up ? 1 : -1)) } : x)));
-    const next = new Set(likedSet);
-    if (up) next.add(item.id);
-    else next.delete(item.id);
-    setLikedSet(next);
-    store.set("ease:liked", [...next]);
-    const { error } = await supabase.rpc("like_interaction", { clip_id: item.id, up });
-    if (error) toast("Like needs the SQL function — see setup notes");
-  };
-
   /* ---- derived ---- */
   const apps = useMemo(() => [...new Set(items.map((i) => i.app))].sort(), [items]);
   const order = useMemo(() => {
     let list = [...items];
-    if (filter.type === "pop") list.sort((a, b) => b.likes - a.likes || b.createdAt - a.createdAt);
+    if (filter.type === "pop") list.sort((a, b) => b.createdAt - a.createdAt);
     else if (filter.type === "app") list = list.filter((i) => i.app === filter.app);
     return list;
   }, [items, filter]);
@@ -204,77 +184,57 @@ function Directory() {
 
   return (
     <>
-      <header>
-        <div className="wordmark">
-          <b>Eas</b>
-          <span className="o"></span>
+      <nav className="topnav">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/pop.svg" alt="pop" className="topnav-logo" />
+      </nav>
+
+      <div className="ct-body">
+      <div className="ct-stage">
+      <div className="ct-stage-head">
+        <div className="stage-head-top">
+          <h1 className="tool-title">Interaction Library</h1>
+          <button className="hbtn solid" onClick={() => openUpload(null)}>
+            + Add interaction
+          </button>
         </div>
-        <span className="owner-badge">
-          <span className="d"></span>OWNER
-        </span>
-        <div className="spacer"></div>
-        <button className="hbtn solid owner-only" onClick={() => openUpload(null)}>
-          + Add interaction
-        </button>
-        <button
-          className="iconbtn"
-          title={isOwner ? "Sign out" : "Sign in"}
-          style={{ borderColor: isOwner ? "var(--orange1)" : undefined }}
-          onClick={onAuthBtn}
-        >
-          <IconLock />
-        </button>
-      </header>
+        <div className="toolbar-chips">
+          {status === "ready" && (
+            <>
+              <button
+                className={"chip" + (filter.type === "all" ? " active" : "")}
+                onClick={() => setFilter({ type: "all" })}
+              >
+                All <span className="cnt">{items.length}</span>
+              </button>
+              {[...apps].sort((a, b) => {
+                if (a.toLowerCase() === "pop") return -1;
+                if (b.toLowerCase() === "pop") return 1;
+                return a.localeCompare(b);
+              }).map((a) => {
+                const w = items.find((i) => i.app === a && i.icon);
+                const n = items.filter((i) => i.app === a).length;
+                const active = filter.type === "app" && filter.app === a;
+                return (
+                  <button
+                    key={a}
+                    className={"chip" + (active ? " active" : "")}
+                    onClick={() => setFilter({ type: "app", app: a })}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {w && <img src={w.icon!} alt="" />}
+                    {a} <span className="cnt">{n}</span>
+                  </button>
+                );
+              })}
+            </>
+          )}
+        </div>
+      </div>{/* ct-stage-head */}
 
-      <div className="subbar">
-        <span className="crumb">
-          Interaction Directory / <b>{crumb}</b>
-        </span>
-        <span className="spacer"></span>
-        <span className="stat">
-          {status === "ready"
-            ? `${items.length} interaction${items.length === 1 ? "" : "s"} · ${apps.length} app${apps.length === 1 ? "" : "s"}`
-            : "—"}
-        </span>
-      </div>
+      <div className="ct-stage-body">
 
-      <div className="filters">
-        {status === "ready" && (
-          <>
-            <button
-              className={"chip pop" + (filter.type === "pop" ? " active" : "")}
-              onClick={() => setFilter({ type: "pop" })}
-            >
-              <IconStar />
-              Pop
-            </button>
-            <button
-              className={"chip" + (filter.type === "all" ? " active" : "")}
-              onClick={() => setFilter({ type: "all" })}
-            >
-              All <span className="cnt">{items.length}</span>
-            </button>
-            {apps.map((a) => {
-              const w = items.find((i) => i.app === a && i.icon);
-              const n = items.filter((i) => i.app === a).length;
-              const active = filter.type === "app" && filter.app === a;
-              return (
-                <button
-                  key={a}
-                  className={"chip" + (active ? " active" : "")}
-                  onClick={() => setFilter({ type: "app", app: a })}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {w && <img src={w.icon!} alt="" />}
-                  {a} <span className="cnt">{n}</span>
-                </button>
-              );
-            })}
-          </>
-        )}
-      </div>
-
-      <div className="grid">
+      <div className="grid" style={{ overflowY: 'auto' }}>
         {status === "loading" && <div className="loading">LOADING DIRECTORY…</div>}
         {status === "error" && (
           <div className="empty">
@@ -297,12 +257,14 @@ function Directory() {
             <Cell
               key={item.id}
               item={item}
-              liked={likedSet.has(item.id)}
               onOpen={openLightbox}
-              onLike={toggleLike}
             />
           ))}
       </div>
+
+      </div>{/* ct-stage-body */}
+      </div>{/* ct-stage */}
+      </div>{/* ct-body */}
 
       <UploadSheet
         open={uploadOpen}
@@ -330,12 +292,8 @@ function Directory() {
         item={currentLB}
         lbIndex={lbIndex}
         orderLength={order.length}
-        liked={!!currentLB && likedSet.has(currentLB.id)}
         onClose={closeLightbox}
         onStep={step}
-        onLike={() => {
-          if (currentLB) toggleLike(currentLB);
-        }}
         onCopy={onCopy}
         onEdit={() => {
           if (!currentLB || !isOwner) return;

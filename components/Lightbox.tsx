@@ -5,7 +5,7 @@ import type { Item } from "@/lib/types";
 import { t2 } from "@/lib/utils";
 import AppIcon from "./AppIcon";
 import {
-  IconEdit, IconFull, IconHeart, IconLink, IconLoop, IconMute,
+  IconEdit, IconFull, IconLink, IconLoop, IconMute,
   IconNext, IconPause, IconPlay, IconPrev, IconTrash, IconVol,
 } from "./Icons";
 
@@ -18,10 +18,8 @@ interface Props {
   item: Item | null;
   lbIndex: number;
   orderLength: number;
-  liked: boolean;
   onClose: () => void;
   onStep: (d: number) => void;
-  onLike: () => void;
   onCopy: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -29,8 +27,8 @@ interface Props {
 }
 
 export default function Lightbox({
-  open, token, item, lbIndex, orderLength, liked,
-  onClose, onStep, onLike, onCopy, onEdit, onDelete, toast,
+  open, token, item, lbIndex, orderLength,
+  onClose, onStep, onCopy, onEdit, onDelete, toast,
 }: Props) {
   const V = useRef<HTMLVideoElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -166,6 +164,11 @@ export default function Lightbox({
       </button>
       <div className="overlay-inner">
         <div className="player-stage" ref={stageRef}>
+          <div className="lightbox-device">
+          <span className="btn-silent" aria-hidden="true" />
+          <span className="btn-vol-up" aria-hidden="true" />
+          <span className="btn-vol-down" aria-hidden="true" />
+          <span className="btn-power" aria-hidden="true" />
           <div className="lightbox-phone">
             <div className="island"></div>
             <video
@@ -183,6 +186,7 @@ export default function Lightbox({
               onPlay={() => setPaused(false)}
               onPause={() => setPaused(true)}
             ></video>
+          </div>
           </div>
           <div className="player">
             <button onClick={togglePlay}>{paused ? <IconPlay /> : <IconPause />}</button>
@@ -241,10 +245,6 @@ export default function Lightbox({
             )}
           </div>
           <div className="lb-actions">
-            <button className={"lb-btn" + (liked ? " liked" : "")} onClick={onLike}>
-              <IconHeart />
-              <span>{item?.likes ?? 0}</span>
-            </button>
             <button className="lb-btn" onClick={onCopy}>
               <IconLink />
               Copy link

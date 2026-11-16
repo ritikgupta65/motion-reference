@@ -1,8 +1,32 @@
 @use 'tokens' as *;
 
+@font-face {
+  font-family: 'Figtree';
+  src: url('/fonts/Figtree-500-latin.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Figtree';
+  src: url('/fonts/Figtree-600-latin.woff2') format('woff2');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Awesome Serif Italic';
+  src: url('/fonts/AwesomeSerifItalic-BdExraTall.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--text); font-family: $font-body; font-size: 13.5px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+/* Page root: flex column so .ct-body fills viewport height below the topnav */
+#__next, #__next > * { display: flex; flex-direction: column; height: 100%; }
 ::selection { background: var(--accent); color: #fff; }
 button { font-family: inherit; }
 button:focus-visible, input:focus-visible, [tabindex]:focus-visible { @include focus-ring; }
