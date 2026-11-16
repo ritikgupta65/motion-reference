@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { BUCKET, configured } from "@/lib/config";
-import { store } from "@/lib/utils";
+
 import { rowToItem, type Filter, type InteractionRow, type Item } from "@/lib/types";
 import Cell from "./Cell";
 import AuthSheet from "./AuthSheet";
 import UploadSheet, { type UploadSession } from "./UploadSheet";
 import Lightbox from "./Lightbox";
-import { IconLock, IconStar } from "./Icons";
+import { IconStar } from "./Icons";
 
 export default function EaseApp() {
   if (!configured) {
@@ -29,8 +29,6 @@ function Directory() {
   const [loadError, setLoadError] = useState("");
   const [filter, setFilter] = useState<Filter>({ type: "pop" });
   const [isOwner, setIsOwner] = useState(false);
-  const [likedSet, setLikedSet] = useState<Set<string>>(() => new Set());
-
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [lbOpen, setLbOpen] = useState(false);
   const [lbToken, setLbToken] = useState(0);
@@ -49,11 +47,6 @@ function Directory() {
     setToastShow(true);
     clearTimeout(toastT.current);
     toastT.current = window.setTimeout(() => setToastShow(false), 3000);
-  }, []);
-
-  /* liked set lives in localStorage */
-  useEffect(() => {
-    setLikedSet(new Set(store.get<string[]>("ease:liked") || []));
   }, []);
 
   /* ---- auth ---- */
@@ -120,23 +113,11 @@ function Directory() {
     return () => subscription.unsubscribe();
   }, [refreshAuth, load]);
 
-  const toggleLike = async (item: Item) => {
-    const up = !likedSet.has(item.id);
-    setItems((prev) => prev.map((x) => (x.id === item.id ? { ...x, likes: Math.max(0, x.likes + (up ? 1 : -1)) } : x)));
-    const next = new Set(likedSet);
-    if (up) next.add(item.id);
-    else next.delete(item.id);
-    setLikedSet(next);
-    store.set("ease:liked", [...next]);
-    const { error } = await supabase.rpc("like_interaction", { clip_id: item.id, up });
-    if (error) toast("Like needs the SQL function — see setup notes");
-  };
-
   /* ---- derived ---- */
   const apps = useMemo(() => [...new Set(items.map((i) => i.app))].sort(), [items]);
   const order = useMemo(() => {
     let list = [...items];
-    if (filter.type === "pop") list.sort((a, b) => b.likes - a.likes || b.createdAt - a.createdAt);
+    if (filter.type === "pop") list.sort((a, b) => b.createdAt - a.createdAt);
     else if (filter.type === "app") list = list.filter((i) => i.app === filter.app);
     return list;
   }, [items, filter]);
@@ -213,16 +194,8 @@ function Directory() {
           <span className="d"></span>OWNER
         </span>
         <div className="spacer"></div>
-        <button className="hbtn solid owner-only" onClick={() => openUpload(null)}>
+        <button className="hbtn solid" onClick={() => openUpload(null)}>
           + Add interaction
-        </button>
-        <button
-          className="iconbtn"
-          title={isOwner ? "Sign out" : "Sign in"}
-          style={{ borderColor: isOwner ? "var(--orange1)" : undefined }}
-          onClick={onAuthBtn}
-        >
-          <IconLock />
         </button>
       </header>
 
@@ -297,9 +270,7 @@ function Directory() {
             <Cell
               key={item.id}
               item={item}
-              liked={likedSet.has(item.id)}
               onOpen={openLightbox}
-              onLike={toggleLike}
             />
           ))}
       </div>
@@ -330,12 +301,8 @@ function Directory() {
         item={currentLB}
         lbIndex={lbIndex}
         orderLength={order.length}
-        liked={!!currentLB && likedSet.has(currentLB.id)}
         onClose={closeLightbox}
         onStep={step}
-        onLike={() => {
-          if (currentLB) toggleLike(currentLB);
-        }}
         onCopy={onCopy}
         onEdit={() => {
           if (!currentLB || !isOwner) return;

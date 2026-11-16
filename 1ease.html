@@ -229,7 +229,6 @@ const shell = `
     <span class="owner-badge"><span class="d"></span>OWNER</span>
     <div class="spacer"></div>
     <button class="hbtn solid owner-only" id="addBtn">+ Add interaction</button>
-    <button class="iconbtn" id="authBtn" title="Sign in">${IC.lock}</button>
   </header>
   <div class="subbar">
     <span class="crumb">Interaction Directory / <b id="crumbFilter">Pop</b></span>
@@ -330,13 +329,12 @@ function run(){
     const { data:{ session } } = await supabase.auth.getSession();
     isOwner = !!session;
     document.body.classList.toggle('is-owner', isOwner);
-    $('authBtn').title = isOwner ? 'Sign out' : 'Sign in';
-    $('authBtn').style.borderColor = isOwner ? 'var(--orange1)' : '';
+    const authBtn = $('authBtn');
+    if(authBtn){
+      authBtn.title = isOwner ? 'Sign out' : 'Sign in';
+      authBtn.style.borderColor = isOwner ? 'var(--orange1)' : '';
+    }
   }
-  $('authBtn').onclick = async ()=>{
-    if(isOwner){ await supabase.auth.signOut(); await refreshAuth(); render(); toast('Signed out'); }
-    else $('authOverlay').classList.add('open');
-  };
   $('cancelAuth').onclick=()=>$('authOverlay').classList.remove('open');
   $('doAuth').onclick=async()=>{
     const email=$('authEmail').value.trim(), password=$('authPass').value;

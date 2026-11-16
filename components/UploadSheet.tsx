@@ -120,10 +120,6 @@ export default function UploadSheet({
   const videoDrop = useDrop(setVideo);
 
   const save = async () => {
-    if (!isOwner) {
-      toast("Sign in as owner first");
-      return;
-    }
     const t = title.trim(),
       a = appName.trim();
     if (!a) {
@@ -166,7 +162,6 @@ export default function UploadSheet({
           video_url: publicUrl,
           video_path: path,
           duration,
-          likes: 0,
         };
         const { error: insErr } = await supabase.from("interactions").insert(row);
         if (insErr) {
@@ -182,7 +177,6 @@ export default function UploadSheet({
           video: publicUrl,
           video_path: path,
           duration,
-          likes: 0,
           createdAt: Date.now(),
         });
         toast("Added to the directory");

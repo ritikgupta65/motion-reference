@@ -6,7 +6,6 @@ export interface Item {
   video: string;
   video_path: string | null;
   duration: number | null;
-  likes: number;
   createdAt: number;
 }
 
@@ -20,7 +19,6 @@ export interface InteractionRow {
   video_url: string;
   video_path: string | null;
   duration: number | null;
-  likes: number | null;
   created_at: string;
 }
 
@@ -32,6 +30,5 @@ export const rowToItem = (r: InteractionRow): Item => ({
   video: r.video_url,
   video_path: r.video_path,
   duration: r.duration,
-  likes: r.likes || 0,
   createdAt: new Date(r.created_at).getTime(),
 });

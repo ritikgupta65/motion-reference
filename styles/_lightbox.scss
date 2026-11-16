@@ -53,8 +53,6 @@
   transition: background-color var(--dur-hover), color var(--dur-hover), border-color var(--dur-hover);
   &:hover { background: var(--raised-hover); }
   svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.9; }
-  &.liked { border-color: var(--danger); color: var(--danger); }
-  &.liked svg { fill: var(--danger); stroke: var(--danger); }
   &.danger { color: var(--danger); }
   &.danger:hover { border-color: var(--danger); background: rgba(242, 87, 87, .1); }
 }
